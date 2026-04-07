@@ -114,21 +114,19 @@ python manage.py send_water_reminders
 
 ## Deploy on Render
 
-This repo now includes a `render.yaml` blueprint, so deployment is mostly one-click.
+This repo includes a `render.yaml` blueprint for a free-friendly setup (web + postgres).
 
 1. Push your latest code to GitHub.
 2. In Render, click `New +` -> `Blueprint` and connect your repo.
 3. Render will detect `render.yaml` and create:
    - one web service (`roommate-tracker-web`)
-   - one cron service (`roommate-tracker-reminder`)
    - one PostgreSQL database (`roommate-tracker-db`)
-4. After first deploy, open shell for the web service and create admin user:
-
-```bash
-python manage.py createsuperuser
-```
-
-5. Set email environment variables in Render (if reminder emails should work):
+4. Admin user is auto-created during build using:
+   - `DJANGO_SUPERUSER_USERNAME`
+   - `DJANGO_SUPERUSER_EMAIL`
+   - `DJANGO_SUPERUSER_PASSWORD`
+5. After first deploy, immediately change default admin password from Django admin.
+6. Set email environment variables in Render (if reminder emails should work):
    - `DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend`
    - `DJANGO_EMAIL_HOST`
    - `DJANGO_EMAIL_PORT`
@@ -138,5 +136,6 @@ python manage.py createsuperuser
    - `DJANGO_DEFAULT_FROM_EMAIL`
 
 Important:
-- The free Render web instance sleeps after inactivity, so the cron schedule may run late.
-- If you don't want scheduled reminders on Render, remove the cron service from `render.yaml`.
+- Free Render web sleeps after inactivity.
+- Free web does not include shell/SSH, so the blueprint creates admin automatically.
+- Free plan cannot run a separate cron service; reminders must be triggered manually or moved to a paid background/cron setup.
