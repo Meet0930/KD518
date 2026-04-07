@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 top-head">
+  <div>
+    <h2 class="mb-0">Dashboard</h2>
+    <p class="help-text mb-0">Welcome, {{ user.username }}. Your floating control panel for bottle tracking.</p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'water:entry_add' %}" class="btn btn-success">Tap here to add entry</a>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card card-soft">
+      <div class="card-body">
+        <div class="text-muted small">Total bottles filled</div>
+        <div class="fs-3 fw-semibold">{{ total_quantity }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-soft">
+      <div class="card-body">
+        <div class="text-muted small">Today activity</div>
+        <div class="fs-3 fw-semibold">{{ today_quantity }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-soft">
+      <div class="card-body">
+        <div class="text-muted small">Most active roommate</div>
+        {% if most_active %}
+          <div class="fs-5 fw-semibold">{{ most_active.roommate__name }}</div>
+          <div class="small text-muted">{{ most_active.total_bottles }} bottles</div>
+        {% else %}
+          <div class="fs-6">No data yet</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-5">
+    <div class="card card-soft mb-3">
+      <div class="card-header bg-transparent fw-semibold">Turn Tracker</div>
+      <div class="card-body">
+        {% if focus_actor_text %}
+          <p class="mb-0"><strong>{{ focus_actor_text }}</strong></p>
+        {% else %}
+          <p class="mb-0">No roommates are configured for rotation yet.</p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card card-soft mb-3">
+      <div class="card-header bg-transparent fw-semibold">Who should fill next?</div>
+      <div class="card-body">
+        {% if next_roommate %}
+          <p><strong>{{ next_roommate.name }}</strong> should fill next.</p>
+        {% else %}
+          <p>No roommates yet.</p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card card-soft">
+      <div class="card-header bg-transparent fw-semibold">Quick Help</div>
+      <div class="card-body">
+        <p class="mb-2">Click <strong>Add Entry</strong> when you fill the bottle.</p>
+        <p class="mb-2">Use <strong>History</strong> to review all records.</p>
+        <p class="mb-0">Use <strong>Filter</strong> to find specific past records.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="card card-soft">
+      <div class="card-header bg-transparent fw-semibold">Recent History</div>
+      <div class="card-body table-responsive">
+        <table class="table table-striped table-sm align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Roommate</th>
+              <th>For Whom</th>
+              <th>Quantity</th>
+              <th>Action</th>
+              <th>Date & Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in entries|slice:":8" %}
+              <tr>
+                <td>{{ entry.roommate.name }}</td>
+                <td>{% if entry.target_roommate %}{{ entry.target_roommate.name }}{% else %}-{% endif %}</td>
+                <td>{{ entry.quantity }}</td>
+                <td>{{ entry.get_action_type_display }}</td>
+                <td>{{ entry.filled_at|date:"Y-m-d H:i" }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="5">No entries yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

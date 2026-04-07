@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 top-head">
+  <div>
+    <h3 class="mb-0">Add Bottle Fill Entry</h3>
+    <div class="text-muted small">Select person and quantity, then launch the entry into the log.</div>
+  </div>
+  <div class="page-actions">
+    <a class="btn btn-outline-secondary btn-sm" href="{% url 'water:dashboard' %}">Use menu to navigate</a>
+  </div>
+</div>
+
+<div class="card card-soft">
+  <div class="card-body">
+    {% if focus_actor_text %}
+      <div class="alert alert-info py-2">
+        <strong>{{ focus_actor_text }}</strong>
+      </div>
+    {% endif %}
+    <p class="help-text">Click this when you fill the water bottle. Quantity means how many bottles you filled now.</p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn btn-success" type="submit">Save Entry</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+

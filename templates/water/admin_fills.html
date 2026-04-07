@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h3 class="mb-0">Admin – Fill Entries</h3>
+    <div class="text-muted small">Read-only list of bottle fill history.</div>
+  </div>
+  <a class="btn btn-outline-secondary btn-sm" href="{% url 'water:admin_panel' %}">Back</a>
+</div>
+
+<div class="card card-soft">
+  <div class="card-body">
+    <p class="help-text">Admin can review all entries and remove incorrect records.</p>
+    <div class="table-responsive">
+      <table class="table table-striped align-middle mb-0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Roommate</th>
+            <th>For Whom</th>
+            <th>Quantity</th>
+            <th>Action Type</th>
+            <th>Filled at</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for e in entries %}
+          <tr>
+            <td>{{ e.id }}</td>
+            <td>{{ e.roommate.name }}</td>
+            <td>{% if e.target_roommate %}{{ e.target_roommate.name }}{% else %}-{% endif %}</td>
+            <td>{{ e.quantity }}</td>
+            <td>{{ e.get_action_type_display }}</td>
+            <td>{{ e.filled_at }}</td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-danger" href="{% url 'water:admin_fill_delete' e.id %}">Delete</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7" class="text-muted">No entries found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

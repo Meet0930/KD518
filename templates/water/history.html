@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 top-head">
+  <div>
+    <h3 class="mb-0">History</h3>
+    <div class="text-muted small">Mission log of all bottle events. Latest activity appears first.</div>
+  </div>
+  <div class="d-flex gap-2 page-actions">
+    <a class="btn btn-outline-secondary btn-sm" href="{% url 'water:dashboard' %}">Back</a>
+    <a class="btn btn-primary btn-sm" href="{% url 'water:entry_add' %}">Add Entry</a>
+  </div>
+</div>
+
+<div class="card card-soft mb-3">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Filters</h5>
+    <form method="get" class="row g-3">
+      <div class="col-md-3">
+        <label class="form-label">Roommate</label>
+        <select name="roommate" class="form-select">
+          <option value="">All</option>
+          {% for rm in roommates %}
+            <option value="{{ rm.id }}" {% if request.GET.roommate == rm.id|stringformat:'s' %}selected{% endif %}>
+              {{ rm.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Quick Date</label>
+        <select name="date_filter" class="form-select">
+          <option value="">All</option>
+          <option value="today" {% if request.GET.date_filter == "today" %}selected{% endif %}>Today</option>
+          <option value="yesterday" {% if request.GET.date_filter == "yesterday" %}selected{% endif %}>Yesterday</option>
+          <option value="week" {% if request.GET.date_filter == "week" %}selected{% endif %}>Last 7 days</option>
+          <option value="custom" {% if request.GET.date_filter == "custom" %}selected{% endif %}>Custom</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">From</label>
+        <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">To</label>
+        <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control">
+      </div>
+      <div class="col-12">
+        <button class="btn btn-primary" type="submit">Apply</button>
+        <a href="{% url 'water:history' %}" class="btn btn-secondary">Clear</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card card-soft">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped table-sm align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Roommate</th>
+            <th>For Whom</th>
+            <th>Quantity</th>
+            <th>Action Type</th>
+            <th>Filled At</th>
+            <th class="text-end">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in entries %}
+            <tr>
+              <td>{{ entry.roommate.name }}</td>
+              <td>{% if entry.target_roommate %}{{ entry.target_roommate.name }}{% else %}-{% endif %}</td>
+              <td>{{ entry.quantity }}</td>
+              <td>{{ entry.get_action_type_display }}</td>
+              <td>{{ entry.filled_at|date:"Y-m-d H:i" }}</td>
+              <td class="text-end">
+                {% if user.is_staff or entry.roommate.user_id == user.id %}
+                  <a class="btn btn-sm btn-outline-danger" href="{% url 'water:history_entry_delete' entry.id %}" title="Delete entry">Delete</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="6" class="text-muted">No entries found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card card-soft">
+      <div class="card-body">
+        <h3 class="mb-2">{% if edit_user %}Edit User{% else %}Add User{% endif %}</h3>
+        <p class="help-text">Fill the details below and click Save.</p>
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button class="btn btn-primary" type="submit">Save</button>
+          <a class="btn btn-secondary" href="{% url 'water:admin_users' %}">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 top-head">
+  <div>
+    <h3 class="mb-0">Stats</h3>
+    <p class="help-text mb-0">See contribution summary and weekly performance for each roommate.</p>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-6">
+    <div class="card card-soft h-100">
+      <div class="card-header bg-transparent fw-semibold">Most Active Roommate</div>
+      <div class="card-body">
+        {% if most_active %}
+          <div class="fs-5 fw-semibold">{{ most_active.roommate__name }}</div>
+          <div class="text-muted">{{ most_active.total_bottles }} bottles filled</div>
+        {% else %}
+          <div class="text-muted">No data yet.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card card-soft h-100">
+      <div class="card-header bg-transparent fw-semibold">Next Roommate</div>
+      <div class="card-body">
+        {% if next_roommate %}
+          <div class="fs-5 fw-semibold">{{ next_roommate.name }}</div>
+          <div class="text-muted">This person should fill the bottle next.</div>
+        {% else %}
+          <div class="text-muted">No roommate available.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card card-soft mb-3">
+  <div class="card-header bg-transparent fw-semibold">Total Bottles Per Roommate</div>
+  <div class="card-body table-responsive">
+    <table class="table table-striped table-sm align-middle mb-0">
+      <thead>
+        <tr><th>Roommate</th><th>Total Bottles</th></tr>
+      </thead>
+      <tbody>
+        {% for row in totals %}
+          <tr><td>{{ row.roommate__name }}</td><td>{{ row.total_bottles }}</td></tr>
+        {% empty %}
+          <tr><td colspan="2" class="text-muted">No data yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card card-soft">
+  <div class="card-header bg-transparent fw-semibold">Weekly Summary (Last 7 Days)</div>
+  <div class="card-body table-responsive">
+    <table class="table table-striped table-sm align-middle mb-0">
+      <thead>
+        <tr><th>Roommate</th><th>Bottles</th></tr>
+      </thead>
+      <tbody>
+        {% for row in weekly %}
+          <tr><td>{{ row.roommate__name }}</td><td>{{ row.total_bottles }}</td></tr>
+        {% empty %}
+          <tr><td colspan="2" class="text-muted">No data for this week.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+

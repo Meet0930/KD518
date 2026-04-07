@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card card-soft">
+      <div class="card-body">
+        <h2 class="mb-2">{% if roommate %}Edit Roommate{% else %}Add Roommate{% endif %}</h2>
+        <p class="help-text">Enter roommate details and optionally link a user account.</p>
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button class="btn btn-primary" type="submit">Save</button>
+          <a href="{% url 'water:roommate_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

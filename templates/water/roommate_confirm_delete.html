@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-5">
+    <div class="card card-soft border-danger">
+      <div class="card-body">
+        <h2 class="text-danger mb-2">Delete Roommate</h2>
+        <p>Are you sure you want to delete <strong>{{ roommate.name }}</strong>?</p>
+        <p class="help-text">This action cannot be undone.</p>
+        <form method="post">
+          {% csrf_token %}
+          <button class="btn btn-danger" type="submit">Yes, delete</button>
+          <a href="{% url 'water:roommate_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
