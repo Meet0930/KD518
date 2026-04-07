@@ -112,3 +112,31 @@ Then run:
 python manage.py send_water_reminders
 ```
 
+## Deploy on Render
+
+This repo now includes a `render.yaml` blueprint, so deployment is mostly one-click.
+
+1. Push your latest code to GitHub.
+2. In Render, click `New +` -> `Blueprint` and connect your repo.
+3. Render will detect `render.yaml` and create:
+   - one web service (`roommate-tracker-web`)
+   - one cron service (`roommate-tracker-reminder`)
+   - one PostgreSQL database (`roommate-tracker-db`)
+4. After first deploy, open shell for the web service and create admin user:
+
+```bash
+python manage.py createsuperuser
+```
+
+5. Set email environment variables in Render (if reminder emails should work):
+   - `DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend`
+   - `DJANGO_EMAIL_HOST`
+   - `DJANGO_EMAIL_PORT`
+   - `DJANGO_EMAIL_HOST_USER`
+   - `DJANGO_EMAIL_HOST_PASSWORD`
+   - `DJANGO_EMAIL_USE_TLS=1`
+   - `DJANGO_DEFAULT_FROM_EMAIL`
+
+Important:
+- The free Render web instance sleeps after inactivity, so the cron schedule may run late.
+- If you don't want scheduled reminders on Render, remove the cron service from `render.yaml`.
