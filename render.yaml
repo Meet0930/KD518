@@ -25,8 +25,8 @@ services:
           name: roommate-tracker-db
           property: connectionString
       - key: DJANGO_SUPERUSER_USERNAME
-        value: "Admin"
+        value: "Meet"
       - key: DJANGO_SUPERUSER_EMAIL
-        value: "admin@example.com"
+        value: "meet@example.com"
       - key: DJANGO_SUPERUSER_PASSWORD
-        value: "ChangeThisAdminPassword123!"
+        value: "Meet@123"
