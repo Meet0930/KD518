@@ -9,7 +9,7 @@ services:
     name: roommate-tracker-web
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate && (python manage.py createsuperuser --noinput || true)
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate && python manage.py sync_default_superuser
     startCommand: gunicorn roommate_tracker.wsgi:application
     envVars:
       - key: DJANGO_DEBUG

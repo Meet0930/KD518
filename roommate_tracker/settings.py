@@ -115,14 +115,9 @@ if not DEBUG:
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Use console email backend by default in local/dev to avoid SMTP auth errors.
-# In production, set DJANGO_EMAIL_BACKEND explicitly (usually SMTP).
-EMAIL_BACKEND = os.getenv(
-    "DJANGO_EMAIL_BACKEND",
-    "django.core.mail.backends.console.EmailBackend"
-    if DEBUG
-    else "django.core.mail.backends.smtp.EmailBackend",
-)
+# Safe default for all environments: console backend unless explicitly overridden.
+# Set DJANGO_EMAIL_BACKEND to SMTP backend in environments where SMTP is configured.
+EMAIL_BACKEND = os.getenv("DJANGO_EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
 
 # SMTP settings (only used when EMAIL_BACKEND is SMTP).
 EMAIL_HOST = os.getenv("DJANGO_EMAIL_HOST", "smtp.gmail.com")
@@ -131,7 +126,7 @@ EMAIL_HOST_USER = os.getenv("DJANGO_EMAIL_HOST_USER", "kachhadiyameet7@gmail.com
 EMAIL_HOST_PASSWORD = os.getenv("DJANGO_EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = os.getenv("DJANGO_EMAIL_USE_TLS", "1") == "1"
 DEFAULT_FROM_EMAIL = os.getenv("DJANGO_DEFAULT_FROM_EMAIL", "kachhadiyameet7@gmail.com")
-EMAIL_FAIL_SILENTLY = os.getenv("DJANGO_EMAIL_FAIL_SILENTLY", "1" if DEBUG else "0") == "1"
+EMAIL_FAIL_SILENTLY = os.getenv("DJANGO_EMAIL_FAIL_SILENTLY", "1") == "1"
 
 # 1 = notify all roommates; 0 = only current-turn roommate.
 TURN_REMINDER_NOTIFY_ALL = os.getenv("TURN_REMINDER_NOTIFY_ALL", "0") == "1"
