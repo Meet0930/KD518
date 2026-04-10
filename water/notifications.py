@@ -41,7 +41,6 @@ def send_turn_reminder_email(turn_roommate: Roommate | None, notify_all: bool = 
         GUJARATI_BODY,
         settings.DEFAULT_FROM_EMAIL,
         recipients,
-        fail_silently=False,
+        fail_silently=settings.EMAIL_FAIL_SILENTLY,
     )
     return len(recipients)
-
